@@ -68,13 +68,12 @@ func ToSnakeCase(str string) string {
 	}
 
 	if unicode.IsNumber(strRune[strLen-1]) {
-		if unicode.IsNumber(prev) {
+		if !unicode.IsNumber(prev) && !unicode.IsLetter(prev) {
+			newStr.WriteRune('_')
 			newStr.WriteRune(strRune[strLen-1])
-			return newStr.String()
 		}
 
-		newStr.WriteRune('_')
-		return newStr.String()
+		newStr.WriteRune(strRune[strLen-1])
 	}
 
 	if unicode.IsLetter(strRune[strLen-1]) {
@@ -83,7 +82,10 @@ func ToSnakeCase(str string) string {
 		}
 
 		newStr.WriteRune(unicode.ToLower(strRune[strLen-1]))
-		return newStr.String()
+	}
+
+	if newStr.String()[newStr.Len()-1:newStr.Len()] == "_" {
+		return string(newStr.String())[0 : newStr.Len()-1]
 	}
 
 	return string(newStr.String())
