@@ -1,3 +1,3 @@
-module iolave.com/go-app-factory
+module github.com/iolave/go-mach-logger
 
 go 1.22.1
