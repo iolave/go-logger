@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	strhelpers "github.com/iolave/go-mach-logger/src/helpers/string"
+	strhelpers "github.com/iolave/go-logger/src/helpers/string"
 )
 
 type Logger struct {
