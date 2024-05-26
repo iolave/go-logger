@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	strhelpers "github.com/iolave/go-logger/helpers/string"
+	"github.com/iolave/go-logger/internal/strhelpers"
 )
 
 type Logger struct {
