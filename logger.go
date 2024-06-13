@@ -7,18 +7,25 @@ import (
 	"time"
 
 	"github.com/iolave/go-logger/internal/strhelpers"
+	"github.com/timandy/routine"
 )
 
 type Logger struct {
-	name string
+	name         string
+	traceStorage routine.ThreadLocal[map[string]string]
 }
 
-func New(name string) Logger {
+func New(name string, traceStorage routine.ThreadLocal[map[string]string]) Logger {
 	logger := new(Logger)
 
 	logger.name = name
+	logger.traceStorage = traceStorage
 
 	return *logger
+}
+
+func (log Logger) GetTrace() map[string]string {
+	return log.traceStorage.Get()
 }
 
 func (log Logger) Info(msg string) {
@@ -52,32 +59,6 @@ func (log Logger) Fatal(msg string) {
 	entry.print()
 }
 
-type Trace struct {
-	MachId         string `json:"mach_id"`
-	DeviceId       string `json:"device_id"`
-	RequestId      string `json:"request_id"`
-	BusinessMachId string `json:"business_mach_id"`
-}
-
-type action struct {
-	Source string `json:"source"`
-	Args   any    `json:"args"` // TODO: Write it properly
-}
-
-type logEntry struct {
-	Name          string `json:"name"`
-	Level         int    `json:"level"`
-	Msg           string `json:"msg"`
-	Time          string `json:"time"`
-	Pid           int    `json:"pid"`
-	Hostname      string `json:"hostname"`
-	SchemaVersion string `json:"schemaVersion"`
-	Duration      int    `json:"duration"`
-	Trace         Trace  `json:"trace"`
-	Info          any    `json:"info"` // TODO: Write it properly
-	Action        action `json:"action"`
-}
-
 func (log Logger) buildLogEntryBase() logEntry {
 	entry := new(logEntry)
 
@@ -90,8 +71,28 @@ func (log Logger) buildLogEntryBase() logEntry {
 	entry.Pid = os.Getpid()
 	entry.SchemaVersion = "v1.0.0"   // TODO: maybe remove this
 	entry.Time = time.Now().String() // TODO: Format it properly
+	entry.Trace = log.traceStorage.Get()
 
 	return *entry
+}
+
+type action struct {
+	Source string `json:"source"`
+	Args   any    `json:"args"` // TODO: Write it properly
+}
+
+type logEntry struct {
+	Name          string            `json:"name"`
+	Level         int               `json:"level"`
+	Msg           string            `json:"msg"`
+	Time          string            `json:"time"`
+	Pid           int               `json:"pid"`
+	Hostname      string            `json:"hostname"`
+	SchemaVersion string            `json:"schemaVersion"`
+	Duration      int               `json:"duration"`
+	Trace         map[string]string `json:"trace"`
+	Info          any               `json:"info"` // TODO: Write it properly
+	Action        action            `json:"action"`
 }
 
 func (entry logEntry) print() {
