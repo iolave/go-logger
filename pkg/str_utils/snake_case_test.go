@@ -1,4 +1,4 @@
-package strhelpers
+package strutils
 
 import "testing"
 

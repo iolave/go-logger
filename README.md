@@ -1,1 +1,1 @@
-# GO app-factory
+# JSON based logger for golang
