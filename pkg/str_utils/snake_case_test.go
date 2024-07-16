@@ -1,6 +1,8 @@
 package strutils
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestToSnakeCase(t *testing.T) {
 
@@ -48,5 +50,4 @@ func TestToSnakeCase(t *testing.T) {
 			t.Fatalf(`ToSnakeCase("%s"), expected = "%s", got = "%s"`, testCase.Msg, testCase.Want, snakeCased)
 		}
 	}
-
 }

@@ -1,34 +1,33 @@
 package logger
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"os"
 	"time"
 
 	strutils "github.com/iolave/go-logger/pkg/str_utils"
-	"github.com/timandy/routine"
 )
 
 type Logger struct {
-	name         string
-	traceStorage routine.ThreadLocal[map[string]string]
+	name string
 }
 
-func New(name string, traceStorage routine.ThreadLocal[map[string]string]) Logger {
-	logger := new(Logger)
-
-	logger.name = name
-	logger.traceStorage = traceStorage
-
-	return *logger
-}
-
-func (log Logger) GetTrace() map[string]string {
-	return log.traceStorage.Get()
+func New(name string) *Logger {
+	return &Logger{
+		name: name,
+	}
 }
 
 func (log Logger) Info(msg string) {
+	entry := log.buildLogEntryBase()
+	entry.Msg = strutils.ToSnakeCase(msg)
+	entry.print()
+}
+
+func (log Logger) InfoWithContext(ctx context.Context, msg string) {
+	fmt.Println(ctx.Value("test"))
 	entry := log.buildLogEntryBase()
 	entry.Msg = strutils.ToSnakeCase(msg)
 	entry.print()
@@ -67,7 +66,6 @@ func (log Logger) buildLogEntryBase() logEntry {
 	entry.Name = log.name
 	entry.Level = 0                  // TODO: Add the proper log level using LOG_LEVEL env
 	entry.Time = time.Now().String() // TODO: Format it properly
-	entry.Trace = log.traceStorage.Get()
 	entry.Pid = os.Getpid()
 	entry.Hostname = hostname
 	entry.SchemaVersion = "v1.0.0" // TODO: maybe remove this
@@ -81,17 +79,16 @@ type action struct {
 }
 
 type logEntry struct {
-	Name          string            `json:"name"`
-	Level         int               `json:"level"`
-	Msg           string            `json:"msg"`
-	Time          string            `json:"time"`
-	Pid           int               `json:"pid"`
-	Hostname      string            `json:"hostname"`
-	SchemaVersion string            `json:"schemaVersion"`
-	Duration      int               `json:"duration"`
-	Trace         map[string]string `json:"trace"`
-	Info          any               `json:"info"` // TODO: Write it properly
-	Action        action            `json:"action"`
+	Name          string `json:"name"`
+	Level         int    `json:"level"`
+	Msg           string `json:"msg"`
+	Time          string `json:"time"`
+	Pid           int    `json:"pid"`
+	Hostname      string `json:"hostname"`
+	SchemaVersion string `json:"schemaVersion"`
+	Duration      int    `json:"duration"`
+	Info          any    `json:"info"` // TODO: Write it properly
+	Action        action `json:"action"`
 }
 
 func (entry logEntry) print() {
