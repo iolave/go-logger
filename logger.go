@@ -1,8 +1,6 @@
 package logger
 
 import (
-	"context"
-	"encoding/json"
 	"fmt"
 	"os"
 	"time"
@@ -20,78 +18,48 @@ func New(name string) *Logger {
 	}
 }
 
-func (log Logger) Info(msg string) {
-	entry := log.buildLogEntryBase()
-	entry.Msg = strutils.ToSnakeCase(msg)
+func (log Logger) Info(msg string, info map[string]interface{}) {
+	entry := log.buildLogEntry(LOG_LEVEL_INFO, msg, info)
 	entry.print()
 }
 
-func (log Logger) InfoWithContext(ctx context.Context, msg string) {
-	fmt.Println(ctx.Value("test"))
-	entry := log.buildLogEntryBase()
-	entry.Msg = strutils.ToSnakeCase(msg)
+func (log Logger) Warn(msg string, info map[string]interface{}) {
+	entry := log.buildLogEntry(LOG_LEVEL_WARN, msg, info)
 	entry.print()
 }
 
-func (log Logger) Warn(msg string) {
-	entry := log.buildLogEntryBase()
-	entry.Msg = strutils.ToSnakeCase(msg)
+func (log Logger) Error(msg string, info map[string]interface{}) {
+	entry := log.buildLogEntry(LOG_LEVEL_ERROR, msg, info)
 	entry.print()
 }
 
-func (log Logger) Error(msg string) {
-	entry := log.buildLogEntryBase()
-	entry.Msg = strutils.ToSnakeCase(msg)
-	entry.print()
-}
-
-func (log Logger) Debug(msg string) {
-	entry := log.buildLogEntryBase()
-	entry.Msg = strutils.ToSnakeCase(msg)
+func (log Logger) Debug(msg string, info map[string]interface{}) {
+	entry := log.buildLogEntry(LOG_LEVEL_DEBUG, msg, info)
 	entry.print()
 }
 
 // TODO: add exit 1
-func (log Logger) Fatal(msg string) {
-	entry := log.buildLogEntryBase()
-	entry.Msg = strutils.ToSnakeCase(msg)
+func (log Logger) Fatal(msg string, info map[string]interface{}) {
+	entry := log.buildLogEntry(LOG_LEVEL_FATAL, msg, info)
 	entry.print()
 }
 
-func (log Logger) buildLogEntryBase() logEntry {
+func (log Logger) buildLogEntry(level LogLevel, msg string, info map[string]interface{}) logEntry {
 	entry := new(logEntry)
 
 	hostname, _ := os.Hostname()
 
+	// Setting base log entry fields
 	entry.Name = log.name
-	entry.Level = 0                  // TODO: Add the proper log level using LOG_LEVEL env
-	entry.Time = time.Now().String() // TODO: Format it properly
+	entry.Level = level.ToString()
+	entry.Time = fmt.Sprintf("%d", time.Now().Unix())
 	entry.Pid = os.Getpid()
 	entry.Hostname = hostname
-	entry.SchemaVersion = "v1.0.0" // TODO: maybe remove this
-	entry.Duration = -1            // TODO: Add the proper duration
+	entry.SchemaVersion = "v1.0.0" // TODO: Add schema definition in README.md
+
+	// Setting user log info
+	entry.Msg = strutils.ToSnakeCase(msg)
+	entry.Info = info
+
 	return *entry
-}
-
-type action struct {
-	Source string `json:"source"`
-	Args   any    `json:"args"` // TODO: Write it properly
-}
-
-type logEntry struct {
-	Name          string `json:"name"`
-	Level         int    `json:"level"`
-	Msg           string `json:"msg"`
-	Time          string `json:"time"`
-	Pid           int    `json:"pid"`
-	Hostname      string `json:"hostname"`
-	SchemaVersion string `json:"schemaVersion"`
-	Duration      int    `json:"duration"`
-	Info          any    `json:"info"` // TODO: Write it properly
-	Action        action `json:"action"`
-}
-
-func (entry logEntry) print() {
-	data, _ := json.Marshal(entry)
-	fmt.Println(string(data))
 }

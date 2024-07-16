@@ -1,7 +1,9 @@
-package strutils
+package strutils_test
 
 import (
 	"testing"
+
+	strutils "github.com/iolave/go-logger/pkg/str_utils"
 )
 
 func TestToSnakeCase(t *testing.T) {
@@ -44,7 +46,7 @@ func TestToSnakeCase(t *testing.T) {
 
 	for i := range testCases {
 		testCase := testCases[i]
-		snakeCased := ToSnakeCase(testCase.Msg)
+		snakeCased := strutils.ToSnakeCase(testCase.Msg)
 
 		if testCase.Want != snakeCased {
 			t.Fatalf(`ToSnakeCase("%s"), expected = "%s", got = "%s"`, testCase.Msg, testCase.Want, snakeCased)
