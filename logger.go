@@ -38,10 +38,10 @@ func (log Logger) Debug(msg string, info map[string]interface{}) {
 	entry.print()
 }
 
-// TODO: add exit 1
 func (log Logger) Fatal(msg string, info map[string]interface{}) {
 	entry := log.buildLogEntry(LOG_LEVEL_FATAL, msg, info)
 	entry.print()
+	os.Exit(1)
 }
 
 func (log Logger) buildLogEntry(level LogLevel, msg string, info map[string]interface{}) LogEntry {
