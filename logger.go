@@ -51,7 +51,7 @@ func (log Logger) buildLogEntry(level LogLevel, msg string, info map[string]inte
 
 	// Setting base log entry fields
 	entry.Name = log.name
-	entry.Level = level.ToString()
+	entry.Level = level
 	entry.Time = fmt.Sprintf("%d", time.Now().Unix())
 	entry.Pid = os.Getpid()
 	entry.Hostname = hostname

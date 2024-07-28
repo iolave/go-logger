@@ -10,7 +10,7 @@ import (
 //
 // [JSON Unmarshall]: https://pkg.go.dev/encoding/json#Unmarshal
 type logEntry struct {
-	Level         string                 `json:"level"`
+	Level         LogLevel               `json:"level"`
 	Name          string                 `json:"name"`
 	Msg           string                 `json:"msg"`
 	Time          string                 `json:"time"`
