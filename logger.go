@@ -44,8 +44,8 @@ func (log Logger) Fatal(msg string, info map[string]interface{}) {
 	entry.print()
 }
 
-func (log Logger) buildLogEntry(level LogLevel, msg string, info map[string]interface{}) logEntry {
-	entry := new(logEntry)
+func (log Logger) buildLogEntry(level LogLevel, msg string, info map[string]interface{}) LogEntry {
+	entry := new(LogEntry)
 
 	hostname, _ := os.Hostname()
 

@@ -9,7 +9,7 @@ import (
 // definition.
 //
 // [JSON Unmarshall]: https://pkg.go.dev/encoding/json#Unmarshal
-type logEntry struct {
+type LogEntry struct {
 	Level         LogLevel               `json:"level"`
 	Name          string                 `json:"name"`
 	Msg           string                 `json:"msg"`
@@ -21,7 +21,20 @@ type logEntry struct {
 }
 
 // TODO: Add the proper log level using LOG_LEVEL env
-func (entry logEntry) print() {
+func (entry LogEntry) print() {
+	if !entry.shouldPrint() {
+		return
+	}
+
 	data, _ := json.Marshal(entry)
 	fmt.Println(string(data))
+}
+
+func (entry LogEntry) shouldPrint() bool {
+	envLogLevel := getLogLevelFromEnv()
+	if entry.Level >= envLogLevel {
+		return true
+	}
+
+	return false
 }
