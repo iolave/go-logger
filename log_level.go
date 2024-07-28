@@ -1,5 +1,10 @@
 package logger
 
+import (
+	"os"
+	"strings"
+)
+
 type LogLevel int
 
 const (
@@ -27,5 +32,24 @@ func (lvl LogLevel) ToString() string {
 		return "debug"
 	default:
 		return "not_set"
+	}
+}
+
+func getLogLevelFromEnv() LogLevel {
+	osLogLevel := strings.ToLower(os.Getenv("LOG_LEVEL"))
+
+	switch osLogLevel {
+	case "fatal":
+		return LOG_LEVEL_FATAL
+	case "error":
+		return LOG_LEVEL_ERROR
+	case "warn":
+		return LOG_LEVEL_WARN
+	case "info":
+		return LOG_LEVEL_INFO
+	case "debug":
+		return LOG_LEVEL_DEBUG
+	default:
+		return LOG_LEVEL_INFO
 	}
 }
