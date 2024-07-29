@@ -17,7 +17,7 @@ type LogEntry struct {
 	Pid           int                    `json:"pid"`
 	Hostname      string                 `json:"hostname"`
 	SchemaVersion string                 `json:"schemaVersion"`
-	Info          map[string]interface{} `json:"info"`
+	CustomData    map[string]interface{} `json:"customData"`
 }
 
 // TODO: Add the proper log level using LOG_LEVEL env

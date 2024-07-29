@@ -18,33 +18,33 @@ func New(name string) *Logger {
 	}
 }
 
-func (log Logger) Info(msg string, info map[string]interface{}) {
-	entry := log.buildLogEntry(LOG_LEVEL_INFO, msg, info)
+func (log Logger) Info(msg string, customData map[string]interface{}) {
+	entry := log.buildLogEntry(LOG_LEVEL_INFO, msg, customData)
 	entry.print()
 }
 
-func (log Logger) Warn(msg string, info map[string]interface{}) {
-	entry := log.buildLogEntry(LOG_LEVEL_WARN, msg, info)
+func (log Logger) Warn(msg string, customData map[string]interface{}) {
+	entry := log.buildLogEntry(LOG_LEVEL_WARN, msg, customData)
 	entry.print()
 }
 
-func (log Logger) Error(msg string, info map[string]interface{}) {
-	entry := log.buildLogEntry(LOG_LEVEL_ERROR, msg, info)
+func (log Logger) Error(msg string, customData map[string]interface{}) {
+	entry := log.buildLogEntry(LOG_LEVEL_ERROR, msg, customData)
 	entry.print()
 }
 
-func (log Logger) Debug(msg string, info map[string]interface{}) {
-	entry := log.buildLogEntry(LOG_LEVEL_DEBUG, msg, info)
+func (log Logger) Debug(msg string, customData map[string]interface{}) {
+	entry := log.buildLogEntry(LOG_LEVEL_DEBUG, msg, customData)
 	entry.print()
 }
 
-func (log Logger) Fatal(msg string, info map[string]interface{}) {
-	entry := log.buildLogEntry(LOG_LEVEL_FATAL, msg, info)
+func (log Logger) Fatal(msg string, customData map[string]interface{}) {
+	entry := log.buildLogEntry(LOG_LEVEL_FATAL, msg, customData)
 	entry.print()
 	os.Exit(1)
 }
 
-func (log Logger) buildLogEntry(level LogLevel, msg string, info map[string]interface{}) LogEntry {
+func (log Logger) buildLogEntry(level LogLevel, msg string, customData map[string]interface{}) LogEntry {
 	entry := new(LogEntry)
 
 	hostname, _ := os.Hostname()
@@ -59,7 +59,7 @@ func (log Logger) buildLogEntry(level LogLevel, msg string, info map[string]inte
 
 	// Setting user log info
 	entry.Msg = strutils.ToSnakeCase(msg)
-	entry.Info = info
+	entry.CustomData = customData
 
 	return *entry
 }
