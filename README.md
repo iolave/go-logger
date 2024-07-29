@@ -10,9 +10,9 @@ go get github.com/iolave/go-logger
 
 ## Environment variables
 
-| Variable  | Description | Default value |
-|-----------|-------------|---------------|
-| LOG_LEVEL | Accepts any name value of the [log level definition](#log-level-definition). | `info` |
+| Variable    | Description | Default value |
+|-------------|-------------|---------------|
+| `LOG_LEVEL` | Accepts any name value of the [log level definition](#log-level-definition). | `info` |
 
 ## Usage
 
@@ -43,16 +43,16 @@ logger.Fatal("fatal message", map[string]any{})
 
 ### Log entry schema
 
-| Field         | Description                      |
-|---------------|----------------------------------|
-| level         | Log entry level                  |
-| name          | Name of the app/logger           |
-| msg           | Log message in snake case format |
-| time          | Unix time                        |
-| pid           | Process id                       |
-| hostname      | System's hostname                |
-| schemaVersion | This schema version (v1.0.0)     |
-| customData    | Custom data in any form or shape. Feel free to use this field as you want |
+| Field         | Description                      | JSON type |
+|---------------|----------------------------------|-----------|
+| level         | Log entry level                  | `number`    | 
+| name          | Name of the app/logger           | `string`    |
+| msg           | Log message in snake case format | `string`    |
+| time          | Unix time                        | `number`    |
+| pid           | Process id                       | `number`    |
+| hostname      | System's hostname                | `string`    |
+| schemaVersion | This schema version (v1.0.0)     | `string`    |
+| customData    | Custom data in any form or shape. Feel free to use this field as you want | `Record<string, any>` |
 
 ### Log level definition
 | Level | Name  |
