@@ -1,7 +1,6 @@
 package logger
 
 import (
-	"fmt"
 	"os"
 	"time"
 
@@ -52,7 +51,7 @@ func (log Logger) buildLogEntry(level LogLevel, msg string, customData map[strin
 	// Setting base log entry fields
 	entry.Name = log.name
 	entry.Level = level
-	entry.Time = fmt.Sprintf("%d", time.Now().Unix())
+	entry.Time = int(time.Now().Unix())
 	entry.Pid = os.Getpid()
 	entry.Hostname = hostname
 	entry.SchemaVersion = "v1.0.0" // TODO: Add schema definition in README.md

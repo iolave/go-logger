@@ -13,7 +13,7 @@ type LogEntry struct {
 	Level         LogLevel               `json:"level"`
 	Name          string                 `json:"name"`
 	Msg           string                 `json:"msg"`
-	Time          string                 `json:"time"`
+	Time          int                    `json:"time"`
 	Pid           int                    `json:"pid"`
 	Hostname      string                 `json:"hostname"`
 	SchemaVersion string                 `json:"schemaVersion"`
