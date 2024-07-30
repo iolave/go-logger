@@ -3,6 +3,10 @@ package logger
 import (
 	"encoding/json"
 	"fmt"
+	"os"
+	"time"
+
+	strutils "github.com/iolave/go-logger/pkg/str_utils"
 )
 
 // Field `Info` is a valid JSON type according to golang [JSON unmarsall]
@@ -37,4 +41,24 @@ func (entry LogEntry) shouldPrint() bool {
 	}
 
 	return false
+}
+
+func newLogEntry(name string, level LogLevel, msg string, customData map[string]interface{}) LogEntry {
+	entry := new(LogEntry)
+
+	hostname, _ := os.Hostname()
+
+	// Setting base log entry fields
+	entry.Name = name
+	entry.Level = level
+	entry.Time = int(time.Now().Unix())
+	entry.Pid = os.Getpid()
+	entry.Hostname = hostname
+	entry.SchemaVersion = "v1.0.0" // TODO: Add schema definition in README.md
+
+	// Setting user log info
+	entry.Msg = strutils.ToSnakeCase(msg)
+	entry.CustomData = customData
+
+	return *entry
 }
