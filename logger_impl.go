@@ -96,14 +96,14 @@ func (l defaultLogger) WarnWithData(ctx context.Context, msg string, err error, 
 
 // Error logs an error entry.
 func (l defaultLogger) Error(ctx context.Context, msg string, err error) {
-	e := newEntry(ctx, l.name, l.version, LEVEL_ERROR, msg, map[string]any{}, nil)
+	e := newEntry(ctx, l.name, l.version, LEVEL_ERROR, msg, map[string]any{}, err)
 	e.Error = err
 	l.log(e)
 }
 
 // ErrorWithData logs an error entry.
 func (l defaultLogger) ErrorWithData(ctx context.Context, msg string, err error, info map[string]any) {
-	e := newEntry(ctx, l.name, l.version, LEVEL_ERROR, msg, info, nil)
+	e := newEntry(ctx, l.name, l.version, LEVEL_ERROR, msg, info, err)
 	l.log(e)
 }
 
